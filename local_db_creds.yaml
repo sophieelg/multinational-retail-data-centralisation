@@ -1,0 +1,5 @@
+LOCAL_HOST: localhost
+LOCAL_PASSWORD: jester12
+LOCAL_USER: postgres
+LOCAL_DATABASE: Sales_Data
+LOCAL_PORT: 5432
