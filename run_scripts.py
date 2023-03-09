@@ -5,7 +5,6 @@ import numpy as np
 from database_utils import DatabaseConnector
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
-# %%
 
 # creates class instances
 db_connector = DatabaseConnector()
@@ -17,6 +16,7 @@ data_cleaner = DataCleaning()
 # get name of the table containing user data
 tables = db_connector.list_db_tables()
 print(tables)
+# %%
 
 # extract table containing user data and return DataFrame
 user_df = data_extractor.read_rds_table(db_connector, 'legacy_users')
@@ -52,3 +52,22 @@ clean_stores_df = data_cleaner.called_clean_store_data(stores_df)
 db_connector.upload_to_db(clean_stores_df, 'dim_store_details')
 # %%
 
+# extract products data from s3 bucket
+products_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
+
+# clean the products data
+products_df = data_cleaner.convert_product_weights(products_df)
+clean_products_df = data_cleaner.clean_products_data(products_df)
+
+# upload the products data to the 'Sales_Data' database
+db_connector.upload_to_db(clean_products_df, 'dim_products')
+# %%
+
+# extract table containing order data and return DataFrame
+orders_df = data_extractor.read_rds_table(db_connector, 'orders_table')
+
+# clean the orders data
+clean_orders_df = data_cleaner.clean_orders_data(orders_df)
+
+# upload the orders data to the Sales_Data database
+db_connector.upload_to_db(clean_orders_df, 'orders_table')

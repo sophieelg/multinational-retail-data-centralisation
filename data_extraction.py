@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import tabula
 import requests
+import boto3
 
 # %%
 
@@ -30,6 +31,11 @@ class DataExtractor:
             stores_data_list.append(df)
             stores_df = pd.concat(stores_data_list, ignore_index=True)
         return stores_df
+    
+    def extract_from_s3(self, s3_url):
+        s3_client = boto3.client('s3')
+        product_df = pd.read_csv(s3_url)
+        return product_df
 
         
 
