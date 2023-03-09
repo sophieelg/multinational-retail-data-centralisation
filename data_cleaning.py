@@ -123,4 +123,17 @@ class DataCleaning:
         # remove columns
         orders_df.drop(['first_name', 'last_name', '1', 'level_0'], axis=1, inplace=True)
         return orders_df
+    
+    def clean_date_events_data(self, date_events_df):
+        # remove NULL and duplicates
+        date_events_df.replace('NULL', np.nan, inplace=True)
+        date_events_df.dropna(inplace=True)
+        date_events_df.drop_duplicates(inplace=True)
+
+        # remove and update incorrect data
+        date_events_df = date_events_df[date_events_df['time_period'].isin(['Evening', 'Morning', 'Midday', 'Late_Hours'])]
+
+        # change dtype
+        date_events_df['time_period'] = date_events_df['time_period'].astype('category')
+        return date_events_df
 # %%

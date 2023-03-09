@@ -36,6 +36,12 @@ class DataExtractor:
         s3_client = boto3.client('s3')
         product_df = pd.read_csv(s3_url)
         return product_df
+    
+    def retrieve_json_data(self, json_url):
+        response = requests.get(json_url)
+        json_data = response.json()
+        date_events_df = pd.DataFrame.from_dict(json_data)
+        return date_events_df
 
         
 

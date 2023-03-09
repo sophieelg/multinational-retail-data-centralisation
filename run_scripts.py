@@ -71,3 +71,14 @@ clean_orders_df = data_cleaner.clean_orders_data(orders_df)
 
 # upload the orders data to the Sales_Data database
 db_connector.upload_to_db(clean_orders_df, 'orders_table')
+# %%
+
+# extract date events data from json
+date_events_df = data_extractor.retrieve_json_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
+
+# clean the date events data
+clean_date_events_df = data_cleaner.clean_date_events_data(date_events_df)
+
+# upload the data events data to the Sales_Data database
+db_connector.upload_to_db(clean_date_events_df, 'dim_date_times')
+# %%
