@@ -21,10 +21,8 @@ class DataCleaning:
     def clean_card_data(self, pdf_df):
         # format data
         pdf_df['card_number'] = pdf_df['card_number'].str.replace(r'[^0-9]+', '')
-
-        # remove NULL & duplicates
-        pdf_df.replace('NULL', np.nan, inplace=True)
-        pdf_df.dropna(inplace=True)
+        
+        # remove duplicates
         pdf_df.drop_duplicates(inplace=True)
 
         # remove incorrect data
@@ -37,6 +35,9 @@ class DataCleaning:
         # change dtypes
         pdf_df['card_number'] = pdf_df['card_number'].astype('int')
         pdf_df['card_provider'] = pdf_df['card_provider'].astype('category')
+
+        # update index column
+        pdf_df = pdf_df.reset_index(drop=True)
         return pdf_df
     
     def called_clean_store_data(self, stores_df):
@@ -46,9 +47,8 @@ class DataCleaning:
         # format data
         stores_df['staff_numbers'] = stores_df['staff_numbers'].str.replace(r'[^0-9]+', '')
 
-        # remove NULL and duplicates
-        stores_df.replace('NULL', np.nan, inplace=True)
-        stores_df.dropna(inplace=True)
+        # remove N/A and duplicates
+        stores_df.replace('N/A', None, inplace=True)
         stores_df.drop_duplicates(inplace=True)
 
         # remove and update incorrect data
@@ -58,14 +58,6 @@ class DataCleaning:
 
         # correct date values
         stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'], infer_datetime_format=True, errors='coerce')
-
-        # change dtypes
-        stores_df['longitude'] = stores_df['longitude'].astype('float')
-        stores_df['staff_numbers'] = stores_df['staff_numbers'].astype('int')
-        stores_df['store_type'] = stores_df['store_type'].astype('category')
-        stores_df['latitude'] = stores_df['latitude'].astype('float')
-        stores_df['country_code'] = stores_df['country_code'].astype('category')
-        stores_df['continent'] = stores_df['continent'].astype('category')
 
         # update index column
         stores_df = stores_df.reset_index(drop=True)
@@ -115,7 +107,6 @@ class DataCleaning:
 
         # replace weight column and remove extra columns
         products_df['weight'] = products_df['weight_amount']
-        products_df.rename(columns={'weight': 'weight(kg)'}, inplace=True)
         products_df.drop(['weight_amount', 'weight_unit'], axis=1, inplace=True)
         return products_df
     

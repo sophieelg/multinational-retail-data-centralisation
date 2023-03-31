@@ -14,7 +14,9 @@ class DataExtractor:
         return user_data
     
     def retrieve_pdf_data(self, link):
-        pdf_df = pd.concat(tabula.read_pdf(link, pages='all'), ignore_index=True)
+        pdf = tabula.convert_into(link, "pdf_output.csv", output_format="csv", pages='all')
+        df = pd.read_csv('pdf_output.csv')
+        pdf_df = pd.DataFrame(df)
         return pdf_df
     
     def list_number_of_stores(self, stores_endpoint, header_dict):
@@ -42,7 +44,3 @@ class DataExtractor:
         json_data = response.json()
         date_events_df = pd.DataFrame.from_dict(json_data)
         return date_events_df
-
-        
-
-# %%
